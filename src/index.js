@@ -18,6 +18,8 @@ db.connect();
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+
+//sử dụng body parsing middleware
 app.use(
     express.urlencoded({
         extended: true,

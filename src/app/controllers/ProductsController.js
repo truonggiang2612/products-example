@@ -17,32 +17,35 @@ class ProductsController {
   }
 
   //[POST] /products/store
-  store(req, res, next) {
-    // Lấy thông tin từ request body
-    const { name, description, price } = req.body;
+store(req, res, next) {
+  // Lấy thông tin từ request body
+  const formData = req.body;
+  console.log(formData); // Thêm log này để kiểm tra dữ liệu đầu vào
 
-    // Tạo một đối tượng mới của model Products
-    const product = new Products({
-      name: name,
-      description: description,
-      price: price
-      // Bạn có thể thêm các trường khác nếu cần
-    });
+  // Tạo một đối tượng mới của model Products
+  const product = new Products(formData);
 
-    // Lưu đối tượng product vào cơ sở dữ liệu
-    product.save()
-      .then(() => {
-        console.log("Sản phẩm đã được thêm vào cơ sở dữ liệu.");
-        // Chuyển hướng người dùng về trang chủ hoặc trang quản lý sản phẩm
-        res.redirect('/');
-      })
-      .catch(error => {
-        console.log("Lỗi------------------>" + error);
-        // Xử lý lỗi nếu có
-        // Hiển thị thông báo lỗi hoặc chuyển hướng đến trang lỗi
-        res.status(500).send("Đã xảy ra lỗi khi thêm sản phẩm.");
-      });
-  }
+  // Lưu đối tượng product vào cơ sở dữ liệu
+  product.save()
+  .then(() => {
+    console.log("Sản phẩm đã được thêm vào cơ sở dữ liệu.");
+    res.redirect('/');
+  })
+  .catch(error => {
+    console.error("Lỗi khi lưu sản phẩm:", error);
+    // In ra lỗi chi tiết hơn
+    if (error.name === 'ValidationError') {
+      // Nếu có lỗi validation từ Mongoose
+      console.error("Validation errors:", error.errors);
+      res.status(400).json({ errors: error.errors });
+    } else {
+      // Lỗi khác
+      res.status(500).send("Đã xảy ra lỗi khi thêm sản phẩm.");
+    }
+  });
+
+}
+
 
 
 
