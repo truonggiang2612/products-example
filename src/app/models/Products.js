@@ -10,7 +10,7 @@ const Products = new Schema({
     price: { type: Number, required: true },
     description: { type: String },
     image: { type: String },
-    slug: { type: String, slug: 'name', unique: true },
+    // slug: { type: String, slug: 'name', unique: true },
 }, {
     timestamps: true,
 });
